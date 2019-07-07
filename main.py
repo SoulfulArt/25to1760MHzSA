@@ -1,11 +1,14 @@
-from rtlsdr import RtlSdr
+from kivy.app import App
+from kivy.uix.widget import Widget
 
-sdr = RtlSdr()
+class SA251760Gui(Widget):
+	pass
 
-# configure device
-sdr.sample_rate = 2.048e6  # Hz
-sdr.center_freq = 70e6     # Hz
-sdr.freq_correction = 60   # PPM
-sdr.gain = 'auto'
 
-print(sdr.read_samples(512))
+class SA251760App(App):
+	def build(self):
+		return SA251760Gui()
+
+
+if __name__ == '__main__':
+	SA251760App().run()
