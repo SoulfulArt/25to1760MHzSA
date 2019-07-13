@@ -1,17 +1,347 @@
-<SA251760Gui>:    
-    canvas:
-        Rectangle:
-            pos: self.center_x - 5, 0
-            size: 10, self.height
-            
-    Label:
-        font_size: 70  
-        center_x: root.width / 4
-        top: root.top - 50
-        text: "0"
+# Varible definitions
+#:set buttonRadius 15
+#:set buttonWidth 110
+#:set buttonHeight 60
+#:set buttonColorOff (51/255,153/255,1,0.35)
+#:set buttonColorOn (51/255,153/255,1,0.45)
+#:set nBtn 4
+#:set blueButton (0.22, 0.92, 0.99, 1)
+#:set borderButton (100, 100, 100, 100)
+#:set fontName '/home/paulo/25to1760MHzSA/fontComputer/cmunsx.ttf'
+#:set backGround '/home/paulo/25to1760MHzSA/images/background.jpg'
+
+#Distance between buttons
+#:set dBtn 20
+
+#:import Factory kivy.factory.Factory
+
+# Layout code begin
+
+<GridLayout>
+    canvas.before:
+        BorderImage:
+            source: backGround
+            pos: self.pos
+            size: self.size
+
+<MinFreqPop@Popup>:
+    size_hint: (.5, .5)
+    title: 'Minimum Frequency'
+    title_font: fontName
+    title_color: blueButton
+    title_size: self.height*0.1
+    title_align: 'center'
+    text_size: self.width, None
+    auto_dismiss: False
+    AnchorLayout:
+        AnchorLayout:
+            anchor_x:'center'
+            anchor_y:'top'
         
-    Label:
-        font_size: 70  
-        center_x: root.width * 3 / 4
-        top: root.top - 50
-        text: "0"
+            TextInput:
+                id: text_minfreq
+                size_hint: .5, .25
+                text_size: self.width, None
+                font_name: fontName
+                font_size: self.height*0.6
+                multiline: False
+                input_filter: 'float'
+
+        FloatLayout:
+
+            Spinner:
+                id: spinner_minfreq
+                size_hint: None, None
+                size_hint: 0.125, .25
+                font_size: self.height*0.35
+                font_name: fontName
+                text: 'MHz'
+                values: 'MHz', 'GHz'
+                pos_hint:
+                    {'x': (root.width \
+                    - text_minfreq.width + 2*self.width)/root.width, 'y':0.75}
+
+            Label:
+                id: error_minfreq
+                font_name: fontName
+                color: (1, 1, 1, 0)
+                font_size: self.height*0.1
+                text: 'Frequency range: 25 to 1760 MHz!'
+                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y':0.15}
+
+            Label:
+                id: error_empty_min
+                font_name: fontName
+                color: (1, 1, 1, 0)
+                font_size: self.height*0.1
+                text: 'Type a value!'
+                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y':0.15}
+
+            Label:
+                id: error_minGmax
+                font_name: fontName
+                color: (1, 1, 1, 0)
+                font_size: self.height*0.1
+                font_size: self.height*0.07
+                text: 'Minmum frequency greater than maximum frequency!'
+                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y':0.15}                
+
+        FloatLayout:
+
+            RoundedBtn:
+                pos_hint:
+                    {'x': 0.5 - 0.5*self.width / root.width,\
+                    'y': 1.5*self.height/root.height}
+                text: 'Ok'
+
+                on_release:
+                    freq = 25
+
+                    if(text_minfreq.text != ''):\
+                    freq = float(text_minfreq.text)
+
+                    if spinner_minfreq.text == 'GHz':\
+                    freq = freq*1000
+
+                    if(text_minfreq.text == ''):\
+                    error_empty_min.color = 1,1,1,1;\
+                    error_minfreq.color = 1,1,1,0;\
+                    error_minGmax.color = 1,1,1,0
+                
+                    elif (freq < 25 or freq > 1760):\
+                    error_minfreq.color = 1,1,1,1;\
+                    error_empty_min.color = 1,1,1,0;\
+                    error_minGmax.color = 1,1,1,0
+
+                    elif (freq > app.globalMaxFreq):\
+                    error_empty_min.color = 1,1,1,0;\
+                    error_minfreq.color = 1,1,1,0;\
+                    error_minGmax.color = 1,1,1,1
+
+                    else:\
+                    app.globalMinFreq = freq;\
+                    error_empty_min.color = 1,1,1,0;\
+                    error_minfreq.color = 1,1,1,0;\
+                    error_minGmax.color = 1,1,1,0;\
+                    root.dismiss()
+                
+                LineRectangle:
+        
+            RoundedBtn:
+                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y': 0}
+                text: 'Cancel'
+                on_release: root.dismiss()
+
+                LineRectangle:
+
+<MaxFreqPop@Popup>:
+    size_hint: (.5, .5)
+    title: 'Maximum Frequency'
+    title_font: fontName
+    title_color: blueButton
+    title_size: self.height*0.1
+    title_align: 'center'
+    text_size: self.width, None
+    auto_dismiss: False
+    AnchorLayout:
+        AnchorLayout:
+            anchor_x:'center'
+            anchor_y:'top'
+        
+            TextInput:
+                id: text_maxfreq
+                size_hint: .5, .25
+                text_size: self.width, None
+                font_name: fontName
+                font_size: self.height*0.6
+                multiline: False
+                input_filter: 'float'
+
+        FloatLayout:
+
+            Spinner:
+                id: spinner_maxfreq
+                size_hint: None, None
+                size_hint: 0.125, .25
+                font_size: self.height*0.35
+                font_name: fontName
+                text: 'MHz'
+                values: 'MHz', 'GHz'
+                pos_hint:
+                    {'x': (root.width \
+                    - text_maxfreq.width + 2*self.width)/root.width, 'y':0.75}
+
+            Label:
+                id: error_maxfreq
+                font_name: fontName
+                color: (1, 1, 1, 0)
+                font_size: self.height*0.1
+                text: 'Frequency range: 25 to 1760 MHz!'
+                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y':0.15}
+
+            Label:
+                id: error_empty_max
+                font_name: fontName
+                color: (1, 1, 1, 0)
+                font_size: self.height*0.1
+                text: 'Type a value!'
+                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y':0.15}
+
+            Label:
+                id: error_maxLmin
+                font_name: fontName
+                color: (1, 1, 1, 0)
+                font_size: self.height*0.07
+                text: 'Maximum frequency less than minimum frequency!'
+                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y':0.15}                
+
+        FloatLayout:
+
+            RoundedBtn:
+                pos_hint:
+                    {'x': 0.5 - 0.5*self.width / root.width,\
+                    'y': 1.5*self.height/root.height}
+                text: 'Ok'
+
+                on_release:
+                    freq = 1760
+
+                    if(text_maxfreq.text != ''):\
+                    freq = float(text_maxfreq.text)
+
+                    if spinner_maxfreq.text == 'GHz':\
+                    freq = freq*1000
+
+                    if(text_maxfreq.text == ''):\
+                    error_empty_max.color = 1,1,1,1;\
+                    error_maxfreq.color = 1,1,1,0;\
+                    error_maxLmin.color = 1,1,1,0
+                
+                    elif (freq < 25 or freq > 1760):\
+                    error_maxfreq.color = 1,1,1,1;\
+                    error_empty_max.color = 1,1,1,0;\
+                    error_maxLmin.color = 1,1,1,0
+
+                    elif (freq < app.globalMinFreq):\
+                    error_empty_max.color = 1,1,1,0;\
+                    error_maxfreq.color = 1,1,1,0;\
+                    error_maxLmin.color = 1,1,1,1
+
+                    else:\
+                    app.globalMaxFreq = freq;\
+                    error_empty_max.color = 1,1,1,0;\
+                    error_maxfreq.color = 1,1,1,0;\
+                    error_maxLmin.color = 1,1,1,0;\
+                    root.dismiss()
+                
+                LineRectangle:
+        
+            RoundedBtn:
+                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y': 0}
+                text: 'Cancel'
+                on_release: root.dismiss()
+
+                LineRectangle:
+
+<RoundedBtn@Button>:
+    background_color: (1, 1, 1, 0)
+    size: buttonWidth, buttonHeight
+    size_hint: None, None
+    font_name: fontName
+    font_size: 20
+    color: blueButton
+    border: borderButton
+    halign: 'center'
+    valign: 'center'
+
+    canvas:
+        Color:
+            rgba: buttonColorOn if self.state =='normal' else buttonColorOff 
+
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [buttonRadius,]
+
+<LineRectangle>:
+    size_hint: None, None
+    pos_hint: None, None   
+
+    canvas:
+        Color:
+            rgba: (51/255,153/255,1,0.9) 
+        Line:
+            width: 1.
+            rounded_rectangle:
+                (root.parent.x, root.parent.y, root.parent.width,
+                root.parent.height, buttonRadius)
+            
+<SA251760Gui>
+    GridLayout:
+        size_hint: 1, 1
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        rows: 1
+
+#Minimum Frequency Button
+    RoundedBtn:
+        text: "Min \n Freq."
+        pos:
+            root.width*0.975 - self.width, \
+            root.height - self.height - (root.height - nBtn*buttonHeight \
+            - (nBtn-1)*dBtn)/2
+
+        on_release: Factory.MinFreqPop().open(), print(root.width)
+
+        LineRectangle:
+
+#Maximum Frequency Button
+    RoundedBtn:
+        text: "Max \n Freq."
+        pos:
+            root.width*0.975 - self.width, \
+            root.height - self.height - (root.height - nBtn*buttonHeight \
+            - (nBtn-1)*dBtn)/2 - buttonHeight - dBtn
+
+        on_release: Factory.MaxFreqPop().open()
+
+        LineRectangle:
+
+#Markers Button
+    RoundedBtn:
+        text: "Markers"
+        pos:
+            root.width*0.975 - self.width, \
+            root.height - self.height - (root.height - nBtn*buttonHeight \
+            - (nBtn-1)*dBtn)/2 - 2*(buttonHeight + dBtn)
+
+        on_release: print(app.globalMinFreq, app.globalMaxFreq)
+
+        LineRectangle:
+
+#Amplitude [dB, dBm, abs] Button
+    RoundedBtn:
+        text: "Amp."
+        pos:
+            root.width*0.975 - self.width, \
+            root.height - self.height - (root.height - nBtn*buttonHeight \
+            - (nBtn-1)*dBtn)/2 - 3*(buttonHeight + dBtn)
+
+        LineRectangle:
+
+    ActionBar:
+        pos_hint: {'top':1}
+        background_image: backGround
+        ActionView:
+            use_separator: True
+            ActionPrevious:
+                title: 'Example App'
+                with_previous: False
+            ActionButton:
+                text: 'File'
+            ActionButton:
+                text: 'Edit'
+            ActionGroup:
+                text: 'Tools' 
+                mode: 'spinner'
+                ActionButton:
+                    text: 'Tool1'
