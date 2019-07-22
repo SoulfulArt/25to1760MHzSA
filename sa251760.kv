@@ -6,9 +6,16 @@
 #:set buttonColorOn (51/255,153/255,1,0.45)
 #:set nBtn 4
 #:set blueButton (0.22, 0.92, 0.99, 1)
+#:set actBarBlue (0.22, 0.92, 0.99, 1)
+#:set blueLabel (17/255, 80/255, 150/255, 0.55)
 #:set borderButton (100, 100, 100, 100)
 #:set fontName '/home/paulo/25to1760MHzSA/fontComputer/cmunsx.ttf'
 #:set backGround '/home/paulo/25to1760MHzSA/images/background.jpg'
+#:set actback '/home/paulo/25to1760MHzSA/images/actback.jpg'
+#:set textAbt 'MIT License\n\nCopyright (c) 2019 Paulo Melo\n\nVersion 1.0.0.'
+#:set emailpm 'paulofariamelo@gmail.com'
+#:import Clipboard kivy.core.clipboard.Clipboard
+#:import MeshLinePlot kivy.garden.graph.MeshLinePlot
 
 #Distance between buttons
 #:set dBtn 20
@@ -17,12 +24,25 @@
 
 # Layout code begin
 
-<GridLayout>
+<GridLayout>:
     canvas.before:
         BorderImage:
             source: backGround
             pos: self.pos
             size: self.size
+
+        Rectangle:
+            source: '/home/paulo/25to1760MHzSA/images/graph.png'
+            pos: self.center_x/2, self.center_y/2
+            size: self.width/2, self.height/2
+
+<ButtonActBar@ButtonActBar>:
+    font_name: fontName
+    background_color: actBarBlue
+
+<ActionGroupCust@ActionGroup>:
+    font_name: fontName
+    background_color: actBarBlue
 
 <MinFreqPop@Popup>:
     size_hint: (.5, .5)
@@ -243,6 +263,48 @@
 
                 LineRectangle:
 
+<AboutPop@Popup>:
+    size_hint: (.5, .5)
+    title: 'About SA251760'
+    title_font: fontName
+    title_color: blueButton
+    title_size: self.height*0.1
+    title_align: 'center'
+    text_size: self.width, None
+    auto_dismiss: True
+    AnchorLayout:
+        AnchorLayout:
+            Label:
+                text: textAbt
+                halign: 'center'
+
+<SupportPop@Popup>:
+    size_hint: (.5, .5)
+    title: 'Support SA251760'
+    title_font: fontName
+    title_color: blueButton
+    title_size: self.height*0.1
+    title_align: 'center'
+    text_size: self.width, None
+    auto_dismiss: True
+    AnchorLayout:
+        AnchorLayout:
+            Label:
+                text: 'Any questions or support mail to:\n\n\n\n'
+                halign: 'center'
+                on_touch_down: Clipboard.copy(emailpm)
+
+            Label:
+                text: '\n\n\n\npaulofariamelo@gmail.com\n\n\n\n'
+                id: email_Label
+                halign: 'center'
+                on_touch_down: Clipboard.copy(emailpm)
+
+            Label:
+                text: '\n\n\n\nClick to copy email!'
+                halign: 'center'
+                on_touch_down: Clipboard.copy(emailpm)
+               
 <RoundedBtn@Button>:
     background_color: (1, 1, 1, 0)
     size: buttonWidth, buttonHeight
@@ -275,7 +337,7 @@
             rounded_rectangle:
                 (root.parent.x, root.parent.y, root.parent.width,
                 root.parent.height, buttonRadius)
-            
+        
 <SA251760Gui>
     GridLayout:
         size_hint: 1, 1
@@ -314,7 +376,8 @@
             root.height - self.height - (root.height - nBtn*buttonHeight \
             - (nBtn-1)*dBtn)/2 - 2*(buttonHeight + dBtn)
 
-        on_release: print(app.globalMinFreq, app.globalMaxFreq)
+        on_release:
+            print(app.globalMinFreq, app.globalMaxFreq)
 
         LineRectangle:
 
@@ -326,22 +389,43 @@
             root.height - self.height - (root.height - nBtn*buttonHeight \
             - (nBtn-1)*dBtn)/2 - 3*(buttonHeight + dBtn)
 
+        on_release: print(plotme.plot.points)
+
         LineRectangle:
 
     ActionBar:
         pos_hint: {'top':1}
-        background_image: backGround
+        background_color: actBarBlue
+
         ActionView:
             use_separator: True
+
+            canvas.after:
+                BorderImage:
+                    source: actback
+                    pos: self.pos
+                    size: 60, 60
+
             ActionPrevious:
-                title: 'Example App'
-                with_previous: False
-            ActionButton:
+            ActionGroupCust:
                 text: 'File'
-            ActionButton:
-                text: 'Edit'
-            ActionGroup:
-                text: 'Tools' 
-                mode: 'spinner'
-                ActionButton:
-                    text: 'Tool1'
+                ButtonActBar:
+                    text: 'Save'
+                ButtonActBar:
+                    text: 'Export as'
+                ButtonActBar:
+                    text: 'Open'
+            ActionGroupCust:
+                text: 'Preferences      '
+                ButtonActBar:
+                    text: 'Color scheme...'
+                ButtonActBar:
+                    text: 'Graphic options...'
+            ActionGroupCust:
+                text: 'Help'
+                ButtonActBar:
+                    text: 'Support'
+                    on_release: Factory.SupportPop().open()
+                ButtonActBar:
+                    text: 'About'
+                    on_release: Factory.AboutPop().open()
