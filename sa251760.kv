@@ -9,7 +9,6 @@
 #:set actBarBlue (0.22, 0.92, 0.99, 1)
 #:set blueLabel (17/255, 80/255, 150/255, 0.55)
 #:set borderButton (100, 100, 100, 100)
-#:set fontName '/home/paulo/25to1760MHzSA/fontComputer/cmunsx.ttf'
 #:set backGround '/home/paulo/25to1760MHzSA/images/background.jpg'
 #:set actback '/home/paulo/25to1760MHzSA/images/actback.jpg'
 #:set textAbt 'MIT License\n\nCopyright (c) 2019 Paulo Melo\n\nVersion 1.0.0.'
@@ -24,35 +23,24 @@
 
 # Layout code begin
 
-<GridLayout>:
-    canvas.before:
-        BorderImage:
-            source: backGround
-            pos: self.pos
-            size: self.size
-
-        Rectangle:
-            source: '/home/paulo/25to1760MHzSA/images/graph.png'
-            pos: self.center_x/2, self.center_y/2
-            size: self.width/2, self.height/2
-
 <ButtonActBar@ButtonActBar>:
-    font_name: fontName
+    font_name: app.fontName
     background_color: actBarBlue
 
 <ActionGroupCust@ActionGroup>:
-    font_name: fontName
+    font_name: app.fontName
     background_color: actBarBlue
 
 <MinFreqPop@Popup>:
+    background: backGround 
     size_hint: (.5, .5)
     title: 'Minimum Frequency'
-    title_font: fontName
+    title_font: app.fontName
     title_color: blueButton
     title_size: self.height*0.1
     title_align: 'center'
     text_size: self.width, None
-    auto_dismiss: False
+    auto_dismiss: True
     AnchorLayout:
         AnchorLayout:
             anchor_x:'center'
@@ -62,7 +50,7 @@
                 id: text_minfreq
                 size_hint: .5, .25
                 text_size: self.width, None
-                font_name: fontName
+                font_name: app.fontName
                 font_size: self.height*0.6
                 multiline: False
                 input_filter: 'float'
@@ -74,7 +62,7 @@
                 size_hint: None, None
                 size_hint: 0.125, .25
                 font_size: self.height*0.35
-                font_name: fontName
+                font_name: app.fontName
                 text: 'MHz'
                 values: 'MHz', 'GHz'
                 pos_hint:
@@ -83,7 +71,7 @@
 
             Label:
                 id: error_minfreq
-                font_name: fontName
+                font_name: app.fontName
                 color: (1, 1, 1, 0)
                 font_size: self.height*0.1
                 text: 'Frequency range: 25 to 1760 MHz!'
@@ -91,7 +79,7 @@
 
             Label:
                 id: error_empty_min
-                font_name: fontName
+                font_name: app.fontName
                 color: (1, 1, 1, 0)
                 font_size: self.height*0.1
                 text: 'Type a value!'
@@ -99,12 +87,12 @@
 
             Label:
                 id: error_minGmax
-                font_name: fontName
+                font_name: app.fontName
                 color: (1, 1, 1, 0)
                 font_size: self.height*0.1
                 font_size: self.height*0.07
                 text: 'Minmum frequency greater than maximum frequency!'
-                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y':0.15}                
+                pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y':0.15}
 
         FloatLayout:
 
@@ -115,7 +103,6 @@
                 text: 'Ok'
 
                 on_release:
-                    freq = 25
 
                     if(text_minfreq.text != ''):\
                     freq = float(text_minfreq.text)
@@ -143,7 +130,7 @@
                     error_empty_min.color = 1,1,1,0;\
                     error_minfreq.color = 1,1,1,0;\
                     error_minGmax.color = 1,1,1,0;\
-                    root.dismiss()
+                    root.dismiss();
                 
                 LineRectangle:
         
@@ -155,14 +142,15 @@
                 LineRectangle:
 
 <MaxFreqPop@Popup>:
+    background: backGround
     size_hint: (.5, .5)
     title: 'Maximum Frequency'
-    title_font: fontName
+    title_font: app.fontName
     title_color: blueButton
     title_size: self.height*0.1
     title_align: 'center'
     text_size: self.width, None
-    auto_dismiss: False
+    auto_dismiss: True
     AnchorLayout:
         AnchorLayout:
             anchor_x:'center'
@@ -172,7 +160,7 @@
                 id: text_maxfreq
                 size_hint: .5, .25
                 text_size: self.width, None
-                font_name: fontName
+                font_name: app.fontName
                 font_size: self.height*0.6
                 multiline: False
                 input_filter: 'float'
@@ -184,7 +172,7 @@
                 size_hint: None, None
                 size_hint: 0.125, .25
                 font_size: self.height*0.35
-                font_name: fontName
+                font_name: app.fontName
                 text: 'MHz'
                 values: 'MHz', 'GHz'
                 pos_hint:
@@ -193,7 +181,7 @@
 
             Label:
                 id: error_maxfreq
-                font_name: fontName
+                font_name: app.fontName
                 color: (1, 1, 1, 0)
                 font_size: self.height*0.1
                 text: 'Frequency range: 25 to 1760 MHz!'
@@ -201,7 +189,7 @@
 
             Label:
                 id: error_empty_max
-                font_name: fontName
+                font_name: app.fontName
                 color: (1, 1, 1, 0)
                 font_size: self.height*0.1
                 text: 'Type a value!'
@@ -209,7 +197,7 @@
 
             Label:
                 id: error_maxLmin
-                font_name: fontName
+                font_name: app.fontName
                 color: (1, 1, 1, 0)
                 font_size: self.height*0.07
                 text: 'Maximum frequency less than minimum frequency!'
@@ -264,9 +252,10 @@
                 LineRectangle:
 
 <AboutPop@Popup>:
+    background: backGround
     size_hint: (.5, .5)
     title: 'About SA251760'
-    title_font: fontName
+    title_font: app.fontName
     title_color: blueButton
     title_size: self.height*0.1
     title_align: 'center'
@@ -279,9 +268,10 @@
                 halign: 'center'
 
 <SupportPop@Popup>:
+    background: backGround
     size_hint: (.5, .5)
     title: 'Support SA251760'
-    title_font: fontName
+    title_font: app.fontName
     title_color: blueButton
     title_size: self.height*0.1
     title_align: 'center'
@@ -306,10 +296,11 @@
                 on_touch_down: Clipboard.copy(emailpm)
                
 <RoundedBtn@Button>:
+    background: backGround
     background_color: (1, 1, 1, 0)
     size: buttonWidth, buttonHeight
     size_hint: None, None
-    font_name: fontName
+    font_name: app.fontName
     font_size: 20
     color: blueButton
     border: borderButton
@@ -326,6 +317,7 @@
             radius: [buttonRadius,]
 
 <LineRectangle>:
+    background: backGround
     size_hint: None, None
     pos_hint: None, None   
 
@@ -338,11 +330,17 @@
                 (root.parent.x, root.parent.y, root.parent.width,
                 root.parent.height, buttonRadius)
         
-<SA251760Gui>
-    GridLayout:
+<SA251760Gui>:
+
+    Image:
+        source: backGround
         size_hint: 1, 1
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        rows: 1
+        allow_stretch: True
+        keep_ratio: False
+
+    Image:
+        source: app.imageSource
+        id: graph_kivy
 
 #Minimum Frequency Button
     RoundedBtn:
@@ -352,7 +350,7 @@
             root.height - self.height - (root.height - nBtn*buttonHeight \
             - (nBtn-1)*dBtn)/2
 
-        on_release: Factory.MinFreqPop().open(), print(root.width)
+        on_release: Factory.MinFreqPop().open()
 
         LineRectangle:
 
@@ -388,8 +386,6 @@
             root.width*0.975 - self.width, \
             root.height - self.height - (root.height - nBtn*buttonHeight \
             - (nBtn-1)*dBtn)/2 - 3*(buttonHeight + dBtn)
-
-        on_release: print(plotme.plot.points)
 
         LineRectangle:
 
