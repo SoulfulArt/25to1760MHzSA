@@ -130,18 +130,20 @@
                     error_empty_min.color = 1,1,1,0;\
                     error_minfreq.color = 1,1,1,0;\
                     error_minGmax.color = 1,1,1,0;\
-                    root.dismiss();
+                    root.dismiss();\
+                    app.relGraph = True
                 
                 LineRectangle:
         
             RoundedBtn:
                 pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y': 0}
                 text: 'Cancel'
-                on_release: root.dismiss()
+                on_release: root.dismiss(); app.relGraph = True
 
                 LineRectangle:
 
 <MaxFreqPop@Popup>:
+
     background: backGround
     size_hint: (.5, .5)
     title: 'Maximum Frequency'
@@ -151,6 +153,7 @@
     title_align: 'center'
     text_size: self.width, None
     auto_dismiss: True
+
     AnchorLayout:
         AnchorLayout:
             anchor_x:'center'
@@ -240,14 +243,15 @@
                     error_empty_max.color = 1,1,1,0;\
                     error_maxfreq.color = 1,1,1,0;\
                     error_maxLmin.color = 1,1,1,0;\
-                    root.dismiss()
+                    root.dismiss();\
+                    app.relGraph = True
                 
                 LineRectangle:
         
             RoundedBtn:
                 pos_hint: {'x': 0.5 - 0.5*self.width / root.width, 'y': 0}
                 text: 'Cancel'
-                on_release: root.dismiss()
+                on_release: root.dismiss(); app.relGraph = True
 
                 LineRectangle:
 
@@ -350,7 +354,7 @@
             root.height - self.height - (root.height - nBtn*buttonHeight \
             - (nBtn-1)*dBtn)/2
 
-        on_release: Factory.MinFreqPop().open()
+        on_release: Factory.MinFreqPop().open(); app.relGraph = False
 
         LineRectangle:
 
@@ -362,7 +366,7 @@
             root.height - self.height - (root.height - nBtn*buttonHeight \
             - (nBtn-1)*dBtn)/2 - buttonHeight - dBtn
 
-        on_release: Factory.MaxFreqPop().open()
+        on_release: Factory.MaxFreqPop().open(); app.relGraph = False
 
         LineRectangle:
 
@@ -376,6 +380,7 @@
 
         on_release:
             print(app.globalMinFreq, app.globalMaxFreq)
+            app.relGraph = False
 
         LineRectangle:
 
