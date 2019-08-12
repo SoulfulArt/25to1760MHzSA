@@ -255,6 +255,85 @@
 
                 LineRectangle:
 
+<MarkPop@Popup>:
+
+    background: backGround
+    size_hint: (.5, .5)
+    title: 'Mark manager'
+    title_font: app.fontName
+    title_color: blueButton
+    title_size: self.height*0.1
+    title_align: 'center'
+    text_size: self.width, None
+    auto_dismiss: True
+
+    AnchorLayout:
+        AnchorLayout:
+            anchor_x:'center'
+            anchor_y:'top'
+
+            TextInput:
+                id: text_marker
+                size_hint: .5, .25
+                text_size: self.width, None
+                font_name: app.fontName
+                font_size: self.height*0.6
+                multiline: False
+                input_filter: 'float'
+
+        FloatLayout:
+
+            Label:
+                id: label_markAdd
+                font_name: app.fontName
+                font_size: self.height*0.1
+                text: 'Marker added!'
+                color: (1, 1, 1, 0)
+                pos_hint:
+                    {'x': 0.5 - (self.width/root.width)/2, 'y': 0}
+
+            Label:
+                id: label_markDel
+                font_name: app.fontName
+                font_size: self.height*0.1
+                text: 'Marker deleted!'
+                color: (1, 1, 1, 0)
+                pos_hint:
+                    {'x': 0.5 - (self.width/root.width)/2, 'y': 0}
+
+            RoundedBtn:
+                pos_hint:
+                    {'x': 0.5 - 1.75*self.width / root.width, 'y': 0}
+                text: 'Add'
+
+                on_release:
+                    app.markers.append(float(text_marker.text))
+                    label_markAdd.color = 1, 1, 1, 1
+                    label_markDel.color = 1, 1, 1, 0
+                
+                LineRectangle:
+
+            RoundedBtn:
+                pos_hint:
+                    {'x': 0.5 - (self.width/root.width)/2, 'y': 0}
+                text: 'Del'
+
+                on_release:
+
+                    if( not app.markers.remove(float(text_marker.text))):\
+                    label_markDel.color = 1, 1, 1, 1
+
+                    label_markAdd.color = 1, 1, 1, 0
+
+                LineRectangle:
+
+            RoundedBtn:
+                pos_hint: {'x': 0.5 + 0.75*self.width / root.width, 'y': 0}
+                text: 'Ok'
+                on_release: root.dismiss(); app.relGraph = True
+
+                LineRectangle:
+
 <AboutPop@Popup>:
     background: backGround
     size_hint: (.5, .5)
@@ -341,10 +420,24 @@
         size_hint: 1, 1
         allow_stretch: True
         keep_ratio: False
-
-    Image:
-        source: app.imageSource
-        id: graph_kivy
+    
+    Graph:
+        id: graphPlot
+        xlabel:'X'
+        ylabel:'Y'
+        x_ticks_minor:5
+        x_tics_major:25
+        y_ticks_major:1
+        y_grid_label:True
+        x_grid_label:True
+        padding:5
+        x_grid:True
+        y_grid:True
+        xmin:-0
+        xmax:100
+        ymin:-1
+        ymax:1
+        size_hint: 0.5, 0.5
 
 #Minimum Frequency Button
     RoundedBtn:
@@ -379,7 +472,7 @@
             - (nBtn-1)*dBtn)/2 - 2*(buttonHeight + dBtn)
 
         on_release:
-            print(app.globalMinFreq, app.globalMaxFreq)
+            Factory.MarkPop().open();
             app.relGraph = False
 
         LineRectangle:
